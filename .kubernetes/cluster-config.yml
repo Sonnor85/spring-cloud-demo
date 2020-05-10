@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: springdemo
+data:
+  logging.pattern.console: "%clr(%d{yyyy.MM.dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%-15X{username}]){magenta} %clr(%-40.40logger{39}){cyan} %m%n"
+  logging.level.root: "INFO"
+  logging.level.hu.siz: "DEBUG"
+  logging.level.org.hibernate: "WARN"
+  spring.cloud.gateway.discovery.locator.enabled: "true"
+  spring.cloud.kubernetes.enabled: "true"
+  spring.cloud.kubernetes.reload.enabled: "true"
+  spring.cloud.kubernetes.reload.mode: "polling"
+  spring.cloud.kubernetes.reload.period: "5000"

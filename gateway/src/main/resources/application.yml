@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: @project.artifactId@
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin, RETAIN_LAST
+      discovery:
+        locator:
+          lower-case-service-id: true
+          url-expression: "'http://'+serviceId"
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "content-type"
+              - "authorization"
+            maxAge: 3600
+      metrics:
+        enabled: true
+    kubernetes:
+      config:
+        name: springdemo
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+build:
+  version: @project.version@

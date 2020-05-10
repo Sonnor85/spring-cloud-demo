@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: iszell/gateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: service-port
+          livenessProbe:
+            httpGet:
+              port: service-port
+              path: /actuator/info
+            initialDelaySeconds: 300
+            timeoutSeconds: 10
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: gateway
+  labels:
+    app: gateway
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: gateway
+  type: LoadBalancer
