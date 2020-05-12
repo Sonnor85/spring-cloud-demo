@@ -5,6 +5,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>gateway</module>
+		<module>authentication</module>
 	</modules>
 
 	<groupId>hu.siz.spring.cloud</groupId>
@@ -21,8 +22,10 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Dependency versions -->
+		<version.jjwt>0.11.1</version.jjwt>
 		<version.lombok>1.18.12</version.lombok>
 		<version.spring-boot>2.2.7.RELEASE</version.spring-boot>
+		<version.spring-doc>1.3.9</version.spring-doc>
 		<version.spring-cloud>Hoxton.SR4</version.spring-cloud>
 		<!-- Plugin versions -->
 		<plugin.version.jacoco>0.8.5</plugin.version.jacoco>

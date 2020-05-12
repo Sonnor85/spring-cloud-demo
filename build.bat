@@ -1,18 +1,36 @@
 @echo off
-Echo =======================================
-Echo = Starting Maven build
-Echo =======================================
+if "%1"=="nobuild" goto :nobuild
+echo =======================================
+echo = Starting Maven build
+echo =======================================
 call mvnw clean install
-Echo =======================================
-Echo = Starting Docker Build
-Echo =======================================
-for %%i in (gateway) do (
+echo =======================================
+echo = Starting Docker Build
+echo =======================================
+for %%i in (gateway, authentication) do (
     cd %%i
     docker build -t iszell/%%i:latest .
     cd ..
 )
-Echo =======================================
-Echo = Starting Kubernetes deployment
-Echo =======================================
-kubectl delete -f .kubernetes
-kubectl apply -f .kubernetes
+goto buildend
+:nobuild
+shift
+echo =======================================
+echo ! Skipping Maven build
+echo =======================================
+:buildend
+if "%1"=="nodeploy" goto :nodeploy
+echo =======================================
+echo = Starting Kubernetes deployment
+echo =======================================
+kubectl delete -f .kubernetes --namespace=springdemo
+kubectl delete namespace springdemo
+kubectl create namespace springdemo
+kubectl apply -f .kubernetes --namespace=springdemo
+goto deployend
+:nodeploy
+shift
+echo =======================================
+echo ! Skipping Kubernetes deployment
+echo =======================================
+:deployend

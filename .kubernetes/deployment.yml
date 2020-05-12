@@ -21,9 +21,11 @@ spec:
           ports:
             - containerPort: 8080
               name: service-port
+            - containerPort: 8081
+              name: management-port
           livenessProbe:
             httpGet:
-              port: service-port
+              port: management-port
               path: /actuator/info
             initialDelaySeconds: 300
             timeoutSeconds: 10
@@ -36,8 +38,58 @@ metadata:
     app: gateway
 spec:
   ports:
-    - port: 8080
+    - name: "service"
+      port: 8080
       targetPort: 8080
+    - name: "management"
+      port: 8081
+      targetPort: 8081
   selector:
     app: gateway
   type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication
+  labels:
+    app: authentication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - name: authentication
+          image: iszell/authentication:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: service-port
+            - containerPort: 8081
+              name: management-port
+          livenessProbe:
+            httpGet:
+              port: management-port
+              path: /actuator/info
+            initialDelaySeconds: 300
+            timeoutSeconds: 10
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: authentication
+  labels:
+    app: authentication
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: authentication
+  type: ClusterIP
