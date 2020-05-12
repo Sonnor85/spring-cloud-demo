@@ -8,7 +8,11 @@ spring:
       discovery:
         locator:
           lower-case-service-id: true
-          url-expression: "'http://'+serviceId"
+          url-expression: "'http://'+serviceId+'/api/v1'"
+          predicates:
+            0:
+              name: Path
+              args[pattern]: "'/api/v1/'+serviceId+'/**'"
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -25,13 +29,5 @@ spring:
             maxAge: 3600
       metrics:
         enabled: true
-    kubernetes:
-      config:
-        name: springdemo
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
 build:
   version: @project.version@
