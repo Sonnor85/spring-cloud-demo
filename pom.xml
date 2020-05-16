@@ -11,7 +11,7 @@
 	<groupId>hu.siz.spring.cloud</groupId>
 	<artifactId>parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>parent</name>
+	<name>Spring Cloud Demo</name>
 	<description>Demo project for Spring Cloud Kubernetes</description>
 
 	<properties>
@@ -24,7 +24,7 @@
 		<!-- Dependency versions -->
 		<version.jjwt>0.11.1</version.jjwt>
 		<version.lombok>1.18.12</version.lombok>
-		<version.spring-boot>2.2.7.RELEASE</version.spring-boot>
+		<version.spring-boot>2.3.0.RELEASE</version.spring-boot>
 		<version.spring-doc>1.3.9</version.spring-doc>
 		<version.spring-cloud>Hoxton.SR4</version.spring-cloud>
 		<!-- Plugin versions -->
