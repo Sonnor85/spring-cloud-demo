@@ -7,7 +7,6 @@ data:
   logging.level.root: "INFO"
   logging.level.hu.siz: "DEBUG"
   logging.level.org.hibernate: "WARN"
-  logging.level.org.springframework: "DEBUG"
   management.endpoints.web.exposure.include: "*"
   management.server.port: "8081"
   server.port: "8080"
