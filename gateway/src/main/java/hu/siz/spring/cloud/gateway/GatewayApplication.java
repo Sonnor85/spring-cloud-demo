@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 /**
- * Main class for the Framework Spring Boot runner
+ * Main class for the Gateway Spring Boot runner
  *
  * @author iszell
  * @since 0.0.1
@@ -25,9 +25,10 @@ import org.springframework.context.annotation.Profile;
 public class GatewayApplication {
 
     private static final String HEADER_NAME = "Access-Control-Allow-Origin";
-    public static final String STRATEGY = DedupeResponseHeaderGatewayFilterFactory.Strategy.RETAIN_LAST.name();
+    private static final String STRATEGY = DedupeResponseHeaderGatewayFilterFactory.Strategy.RETAIN_LAST.name();
+    private static final String API_TAG = "/(?<apitag>.*)";
     private static final String MAPPING = "/(?<remaining>.*)";
-    private static final String REPLACEMENT = "/${remaining}";
+    private static final String REPLACEMENT = "/${apitag}/${remaining}";
 
     /**
      * Main method
@@ -50,22 +51,12 @@ public class GatewayApplication {
     public RouteLocator customRouteLocator(RouteLocatorBuilder routeBuilder) {
         log.info("Creating static routes");
         return routeBuilder.routes()
-                .route("base", (PredicateSpec r) -> r
-                        .path("/base/**")
-                        .filters(f -> f.rewritePath("/base" + MAPPING, REPLACEMENT).
+                .route("authentication", (PredicateSpec r) -> r
+                        .path("/api/v1/authentication/**", "/v3/authentication/**")
+                        .filters(f -> f.rewritePath(API_TAG + "/authentication" + MAPPING, REPLACEMENT).
                                 dedupeResponseHeader(HEADER_NAME, STRATEGY))
-                        .uri("http://localhost:8081"))
-                .route("jobs", (PredicateSpec r) -> r
-                        .path("/jobs/**")
-                        .filters(f -> f.rewritePath("/jobs" + MAPPING, REPLACEMENT).
-                                dedupeResponseHeader(HEADER_NAME, STRATEGY))
-                        .uri("http://localhost:8082"))
-                .route("ordermodule", (PredicateSpec r) -> r
-                        .path("/ordermodule/**")
-                        .filters(f -> f.rewritePath("/ordermodule" + MAPPING, REPLACEMENT).
-                                dedupeResponseHeader(HEADER_NAME, STRATEGY))
-                        .uri("http://localhost:8083"))
+                        .uri("http://localhost:8081")
+                        .metadata("app", "authentication"))
                 .build();
     }
 }
-

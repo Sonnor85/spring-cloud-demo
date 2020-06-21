@@ -8,11 +8,18 @@ spring:
       discovery:
         locator:
           lower-case-service-id: true
-          url-expression: "'http://'+serviceId+'/api/v1'"
+          url-expression: "'http://' + serviceId"
           predicates:
             0:
               name: Path
-              args[pattern]: "'/api/v1/'+serviceId+'/**'"
+              args[pattern]:
+                - "'/api/v1/' + serviceId + '/**'"
+                - "'/v3/' + serviceId + '/**'"
+          filters:
+            0:
+              name: RewritePath
+              args[regexp]: "'/(?<apitag>.*)' + serviceId + '/(?<remaining>.*)'"
+              args[replacement]: "'/${apitag}/${remaining}'"
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -29,5 +36,8 @@ spring:
             maxAge: 3600
       metrics:
         enabled: true
-build:
-  version: @project.version@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

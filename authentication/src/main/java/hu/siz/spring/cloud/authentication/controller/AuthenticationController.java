@@ -18,14 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 public class AuthenticationController implements AuthenticationAPI {
 
-    private JwtTokenService jwtTokenService;
+    private final JwtTokenService jwtTokenService;
 
     public ResponseEntity<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
         String username = authenticationRequest.getUsername();
         log.info("Authentication attempt for user {}", username);
         //TODO do some real authentication here
-        return ResponseEntity.ok(new AuthenticationResponse(jwtTokenService.generateToken(username),
-                jwtTokenService.generateRefreshToken(username)));
+        return buildTokenResponse(username);
     }
 
     @Override
@@ -35,11 +34,16 @@ public class AuthenticationController implements AuthenticationAPI {
         String token = authorization == null ? null : authorization.replace("Bearer ", "");
         try {
             final String username = jwtTokenService.getUsernameFromToken(token);
-            return ResponseEntity.ok(new AuthenticationResponse(jwtTokenService.generateToken(username),
-                    jwtTokenService.generateRefreshToken(username)));
+            log.info("Generating new token for user {}", username);
+            return buildTokenResponse(username);
         } catch (JwtException e) {
             log.warn("JWT token decoding error: {}", e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    private ResponseEntity<AuthenticationResponse> buildTokenResponse(String username) {
+        return ResponseEntity.ok(new AuthenticationResponse(jwtTokenService.generateToken(username),
+                jwtTokenService.generateRefreshToken(username)));
     }
 }

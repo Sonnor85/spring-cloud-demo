@@ -4,6 +4,14 @@ echo =======================================
 echo = Starting Maven build
 echo =======================================
 call mvnw clean install
+goto buildend
+:nobuild
+shift
+echo =======================================
+echo ! Skipping Maven build
+echo =======================================
+:buildend
+if "%1"=="nodocker" goto :nodocker
 echo =======================================
 echo = Starting Docker Build
 echo =======================================
@@ -12,13 +20,13 @@ for %%i in (gateway, authentication) do (
     docker build -t iszell/%%i:latest .
     cd ..
 )
-goto buildend
-:nobuild
+goto dockerend
+:nodocker
 shift
 echo =======================================
-echo ! Skipping Maven build
+echo ! Skipping Docker build
 echo =======================================
-:buildend
+:dockerend
 if "%1"=="nodeploy" goto :nodeploy
 echo =======================================
 echo = Starting Kubernetes deployment

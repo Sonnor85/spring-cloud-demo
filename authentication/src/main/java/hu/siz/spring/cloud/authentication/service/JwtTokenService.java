@@ -19,7 +19,7 @@ public class JwtTokenService {
     private static final long SHORT_TERM = Duration.of(5, MINUTES).toSeconds();
     private static final long LONG_TERM = Duration.of(30, DAYS).toSeconds();
 
-    private Key key = Keys.hmacShaKeyFor("234fdssyxdSDFsdSDfSsdf_SDf.we2335tgdfgdfg".
+    private final Key key = Keys.hmacShaKeyFor("234fdssyxdSDFsdSDfSsdf_SDf.we2335tgdfgdfg".
             getBytes(StandardCharsets.ISO_8859_1));
 
     public String generateToken(String username) {

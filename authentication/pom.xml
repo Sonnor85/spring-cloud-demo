@@ -12,6 +12,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>authentication</artifactId>
+	<name>Authentication</name>
 
 	<dependencies>
 		<dependency>
@@ -24,6 +25,11 @@
 			<artifactId>jjwt-gson</artifactId>
 			<version>${version.jjwt}</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+			<version>${version.prometheus}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -42,6 +48,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -93,6 +103,7 @@
 					<execution>
 						<goals>
 							<goal>repackage</goal>
+							<goal>build-info</goal>
 						</goals>
 					</execution>
 				</executions>
